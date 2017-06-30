@@ -1,0 +1,100 @@
+vm:
+  box: debian/stretch64
+  name: Debian Stretch
+  hostname: local.test
+  ip: 192.168.56.101
+  memory: 2048
+  cpus: 2
+  shared:
+    source: 'C:/Users/<your-os-username>/Documents/www'
+    target: /var/www
+server:
+  packages:
+    - anacron
+    - curl
+    - git
+    - mailutils
+    - memcached
+    - postfix
+    - vim
+nginx:
+  vhosts:
+    default:
+      server_name:
+        - _
+      www_root: /var/www/html
+      try_files:
+        - $uri
+        - $uri/
+        - /index.php$is_args$args
+      locations:
+        default-php:
+          location: ~ \.php$
+          fastcgi: php-fpm
+          fastcgi_index: index.php
+          fastcgi_param:
+            APP_ENV: dev
+            SCRIPT_FILENAME: $document_root$fastcgi_script_name
+          location_cfg_append:
+            set: $path_info $fastcgi_path_info
+            fastcgi_buffers: '16 16k'
+            fastcgi_buffer_size: '32k'
+            fastcgi_keep_conn: 'on'
+    example.com:
+      server_name:
+        - example.com
+      www_root: /var/www/example.com/public
+      ssl: true
+      ssl_redirect: true
+      ssl_cert: /var/www/example.com/certs/fullchain.pem
+      ssl_key: /var/www/example.com/certs/privkey.pem
+      ssl_trusted_cert: /var/www/example.com/certs/chain.pem
+      try_files:
+        - $uri
+        - $uri/
+        - /index.php$is_args$args
+      rewrite_rules:
+        - '^/from/$ /to/$1 last'
+      locations:
+        example-php:
+          location: ~ \.php$
+          fastcgi: php-fpm
+          fastcgi_index: index.php
+          fastcgi_param:
+            APP_ENV: dev
+            SCRIPT_FILENAME: $document_root$fastcgi_script_name
+          location_cfg_append:
+            set: $path_info $fastcgi_path_info
+            fastcgi_keep_conn: 'on'
+php:
+  modules:
+    - php-curl
+    - php-dev
+    - php-fpm
+    - php-gd
+    - php-intl
+    - php-mbstring
+    - php-mcrypt
+    - php-memcached
+    - php-mysql
+    - php-soap
+    - php-xdebug
+    - php-zip
+  conf:
+    display_errors: On
+    error_reporting: -1
+    max_execution_time: 120
+    max_input_vars: 10000
+    request_terminate_timeout: 120
+    sendmail_path: '/usr/bin/mailhog sendmail root@local.test'
+  pool:
+    www:
+      pm.max_children: 20
+      pm.start_servers: 3
+      pm.min_spare_servers: 2
+      pm.max_spare_servers: 4
+      pm.max_requests: 500
+      security.limit_extensions: php
+  xdebug:
+    xdebug.remote_enable: 1
+    xdebug.remote_host: 10.0.2.2

@@ -1,0 +1,8 @@
+forge 'https://forgeapi.puppetlabs.com'
+
+mod 'ftaeger/mailhog'
+mod 'petems/swap_file'
+mod 'puppet/nginx'
+mod 'puppetlabs/mysql'
+mod 'puppetlabs/stdlib'
+mod 'willdurand/composer'

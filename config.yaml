@@ -10,12 +10,8 @@ vm:
     target: /var/www
 server:
   packages:
-    - anacron
-    - curl
     - git
-    - mailutils
     - memcached
-    - postfix
     - vim
 nginx:
   vhosts:

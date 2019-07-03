@@ -1,10 +1,18 @@
 # NodeJS.pp
 class cw_nodejs {
 
-  # Install NodeJS.
-  exec { 'nodejs':
-    command => 'curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - \
-                && sudo apt-get install -y nodejs',
-    onlyif  => 'test ! -f /usr/bin/node',
+  # Add/update NodeJS GNUPG key
+  exec { 'nodejs-gnupg-key':
+    command => 'wget -qO - https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -',
   }
+
+  # Add NodeJS package repository
+  # Note: https requires apt-transport-https
+  file { '/etc/apt/sources.list.d/nodejs.list':
+    content => 'deb http://deb.nodesource.com/node_12.x/ stretch main',
+    before  => Exec['update'],
+  }
+
+  # Install NodeJS
+  package { 'nodejs': }
 }

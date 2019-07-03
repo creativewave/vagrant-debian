@@ -32,11 +32,12 @@ nginx:
             APP_ENV: dev
             SCRIPT_FILENAME: $document_root$fastcgi_script_name
           location_cfg_append:
-            set: $path_info $fastcgi_path_info
             fastcgi_buffers: '16 16k'
             fastcgi_buffer_size: '32k'
             fastcgi_keep_conn: 'on'
-    example.com:
+            fastcgi_read_timeout: 120
+            set: $path_info $fastcgi_path_info
+    simple.com:
       server_name:
         - example.com
       www_root: /var/www/example.com/public
@@ -60,6 +61,10 @@ nginx:
             APP_ENV: dev
             SCRIPT_FILENAME: $document_root$fastcgi_script_name
           location_cfg_append:
+            fastcgi_buffers: '16 16k'
+            fastcgi_buffer_size: '32k'
+            fastcgi_keep_conn: 'on'
+            fastcgi_read_timeout: 120
             set: $path_info $fastcgi_path_info
             fastcgi_keep_conn: 'on'
 php:

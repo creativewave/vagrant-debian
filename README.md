@@ -1,16 +1,16 @@
 # Vagrant Debian Stretch (Puppet)
 
-Recipe for creating a development environment based on Debian Stretch with [Vagrant](https://www.vagrantup.com/) and [Puppet](https://docs.puppet.com/puppet/latest/), inspired by [Puphpet](https://puphpet.com/#custom-files).
-
-## Stack
-
-All packages are downloaded from main/backports official sources.
+Recipe to create and manage a Debian Stretch server with [Vagrant](https://www.vagrantup.com/) and [Puppet](https://docs.puppet.com/puppet/latest/), with the following stack:
 
 * Nginx
-* PHP 7 FPM/CLI + Xdebug + Composer
+* PHP FPM + Xdebug + Composer
 * MariaDB
 * NodeJS
 * Mailhog
+
+All packages are downloaded from main/backports official sources, and the OS version comes from the official Vagrant box for Debian: https://app.vagrantup.com/debian/.
+
+Inspired from [Puphpet](https://puphpet.com/).
 
 ## Todo
 

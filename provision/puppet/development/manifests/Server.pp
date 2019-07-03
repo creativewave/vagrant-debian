@@ -20,7 +20,7 @@ class cw_server (Array $packages = []) {
     before  => Exec['update'],
   }
   file { '/etc/apt/preferences.d/backports.pref':
-    content => "Package: *\nPin: release a=stretch-backports\nPin-Priority: 900",
+    content => "Package: *\nPin: release a=stretch-backports\nPin-Priority: 500",
   }
 
   # Install packages from configuration

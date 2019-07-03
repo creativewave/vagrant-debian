@@ -66,7 +66,47 @@ nginx:
             fastcgi_keep_conn: 'on'
             fastcgi_read_timeout: 120
             set: $path_info $fastcgi_path_info
+    prestashop.com:
+      server_name:
+        - dev.prestashop.com
+        - dev.prestashop.fr
+      www_root: /var/www/prestashop.com
+      ssl: true
+      ssl_redirect: true
+      ssl_cert: /var/www/_saves/certificates/prestashop/fullchain.pem
+      ssl_key: /var/www/_saves/certificates/prestashop/privkey.pem
+      ssl_trusted_cert: /var/www/_saves/certificates/prestashop/chain.pem
+      try_files:
+        - $uri
+        - $uri/
+        - /index.php$is_args$args
+      rewrite_rules:
+        - '^/api/?(.*)$ /webservice/dispatcher.php?url=$1 last'
+        - '^/([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$1$2.jpg last'
+        - '^/([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$1$2$3.jpg last'
+        - '^/([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$1$2$3$4.jpg last'
+        - '^/([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$4/$1$2$3$4$5.jpg last'
+        - '^/([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$4/$5/$1$2$3$4$5$6.jpg last'
+        - '^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$1$2$3$4$5$6$7.jpg last'
+        - '^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$7/$1$2$3$4$5$6$7$8.jpg last'
+        - '^/([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])([0-9])(-[_a-zA-Z0-9-]*)?(-[0-9]+)?/.+\.jpg$ /img/p/$1/$2/$3/$4/$5/$6/$7/$8/$1$2$3$4$5$6$7$8$9.jpg last'
+        - '^/c/([0-9]+)(-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ /img/c/$1$2.jpg last'
+        - '^/c/([a-zA-Z-]+)(-[0-9]+)?/.+\.jpg$ /img/c/$1.jpg last'
+        - '^/([0-9]+)(-[_a-zA-Z0-9-]*)(-[0-9]+)?/.+\.jpg$ /img/c/$1$2.jpg last'
+      locations:
+        prestashop-php:
+          location: ~ \.php$
+          fastcgi: php-fpm
+          fastcgi_index: index.php
+          fastcgi_param:
+            APP_ENV: dev
+            SCRIPT_FILENAME: $document_root$fastcgi_script_name
+          location_cfg_append:
+            fastcgi_buffers: '16 16k'
+            fastcgi_buffer_size: '32k'
             fastcgi_keep_conn: 'on'
+            fastcgi_read_timeout: 120
+            set: $path_info $fastcgi_path_info
 php:
   modules:
     - php-curl

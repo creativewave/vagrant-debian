@@ -1,16 +1,23 @@
 # Server.pp
 class cw_server (Array $packages = []) {
 
-  # Configure a trigger updating packages list.
-  exec { 'apt-get update': refreshonly => true }
+  # Add a cron job to keep packages/archives clean and updated
+  cron { 'cron-job':
+    command => 'apt-get -qq update; apt-get -qq -y dist-upgrade; apt-get -qq autoremove --purge; apt-get -qq autoclean',
+    hour    => 13,
+    minute  => 0,
+  }
+
+  # Update packages list
+  exec { 'update': command => 'apt-get -qq update' }
 
   # Add a rule to update packages list before installing package
-  Exec['apt-get update'] -> Package <| provider == 'apt' |>
+  Exec['update'] -> Package <| |>
 
   # Add backports (main component) packages repository
   file { '/etc/apt/sources.list.d/backports.list':
     content => 'deb http://httpredir.debian.org/debian stretch-backports main',
-    notify  => Exec['apt-get update'],
+    before  => Exec['update'],
   }
   file { '/etc/apt/preferences.d/backports.pref':
     content => "Package: *\nPin: release a=stretch-backports\nPin-Priority: 900",
@@ -18,13 +25,6 @@ class cw_server (Array $packages = []) {
 
   # Install packages from configuration
   ensure_packages($packages)
-
-  # Create a cron job keeping system clean and updated.
-  cron { 'root':
-    command => 'apt-get -qq update && apt-get -qq -y upgrade && apt-get -qq autoclean && apt-get -qq autoremove --purge',
-    hour    => 2,
-    minute  => 0,
-  }
 
   # Configure time
   exec { 'timedatectl set-timezone Europe/Paris': unless => 'test `cat /etc/timezone` = Europe/Paris' }

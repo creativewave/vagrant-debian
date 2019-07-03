@@ -4,10 +4,10 @@ class cw_server (Array $packages = []) {
   # Configure a trigger updating packages list.
   exec { 'apt-get update': refreshonly => true }
 
-  # Update packages list before installing new package.
+  # Add a rule to update packages list before installing package
   Exec['apt-get update'] -> Package <| provider == 'apt' |>
 
-  # Configure backports from main component as a high priority source.
+  # Add backports (main component) packages repository
   file { '/etc/apt/sources.list.d/backports.list':
     content => 'deb http://httpredir.debian.org/debian stretch-backports main',
     notify  => Exec['apt-get update'],
@@ -16,7 +16,7 @@ class cw_server (Array $packages = []) {
     content => "Package: *\nPin: release a=stretch-backports\nPin-Priority: 900",
   }
 
-  # Install configured packages.
+  # Install packages from configuration
   ensure_packages($packages)
 
   # Create a cron job keeping system clean and updated.
@@ -26,22 +26,22 @@ class cw_server (Array $packages = []) {
     minute  => 0,
   }
 
-  # Configure time.
+  # Configure time
   exec { 'timedatectl set-timezone Europe/Paris': unless => 'test `cat /etc/timezone` = Europe/Paris' }
 
-  # Configure SWAP.
-  # Todo: remove petems/swap_file dependency.
+  # Configure SWAP
+  # Todo: remove petems/swap_file dependency
   include swap_file
 
-  # Install and configure Mailhog.
+  # Install and configure Mailhog
   class { 'mailhog': mailhog_version => '1.0.0' }
-  # https://github.com/ftaeger/ftaeger-mailhog/issues/7
+  # Fix user permission issue: https://github.com/ftaeger/ftaeger-mailhog/issues/7
   exec { 'chmod g-w /usr/local && chmod g-w /usr/local/bin':
     onlyif => 'test 775 -eq `stat -c %a /usr/local | cut -c 2-`',
     notify => Service['mailhog'],
   }
 
-  # Copy user dot files.
+  # Copy user dot files
   exec { 'dotfiles':
     cwd     => '/home/vagrant',
     command => 'cp -r /vagrant/provision/files/dot/.[a-zA-Z0-9]* /root/ && \

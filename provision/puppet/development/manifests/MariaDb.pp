@@ -1,9 +1,8 @@
 # MariaDB.pp
 class cw_mariadb {
 
-  # Install and run MariaDB server.
-  # Todo: remove puppetlabs/mysql dependency
-  # (Find out how to create a database user and grant him privileges)
+  # Install and run MariaDB server
+  # TODO: remove puppetlabs/mysql dependency
   #package { 'mariadb-server': }
   #service { 'mariadb-server': hasrestart => true }
   class { 'mysql::server':
@@ -23,6 +22,6 @@ class cw_mariadb {
     },
   }
 
-  # Install MariaDB client.
+  # Install MariaDB client
   package { 'mariadb-client': }
 }

@@ -6,14 +6,14 @@ class cw_php (
   Hash  $xdebug  = {}
 ) {
 
-  # Install and run PHP-FPM.
+  # Install and run PHP-FPM
   package { 'php7.0-fpm': }
   service { 'php7.0-fpm': hasrestart => true }
 
-  # Install modules.
+  # Install modules
   ensure_packages($modules, { notify => Service['php7.0-fpm'] })
 
-  # Configure PHP-FPM pools.
+  # Configure PHP-FPM pools
   $pool.each |$pool_name, $conf| {
     $conf.each |$key, $value| {
       augeas { "pool/${key}: ${value}":
@@ -25,7 +25,7 @@ class cw_php (
     }
   }
 
-  # Configure PHP.
+  # Configure PHP
   file { '/etc/php/7.0/fpm/conf.d/99-custom.ini': replace => no }
   $conf.each |$key, $value| {
     augeas { "custom/${key}: ${value}":
@@ -36,7 +36,7 @@ class cw_php (
     }
   }
 
-  # Configure Xdebug.
+  # Configure Xdebug
   $xdebug.each |$key, $value| {
     augeas { "xdebug/${key}: ${value}":
       lens    => 'PHP.lns',
@@ -46,7 +46,7 @@ class cw_php (
     }
   }
 
-  # Install Composer.
+  # Install Composer
   # Todo: remove willdurand/composer dependency and use official install script.
   # https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
   include composer

@@ -1,14 +1,12 @@
 
-# Puppet Standard Library.
+# Puppet Standard Library
 include stdlib
 
-# Parse configuration file.
-$config = parseyaml(file('/vagrant/config.yaml'))
-
-# Set path (paths to all executable commands).
+# Set path (paths to all executable commands)
 Exec { path => '/bin/:/sbin/:/usr/bin/:/usr/sbin/:/usr/local/bin/:/usr/local/sbin/' }
 
-
+# Configure services
+$config = parseyaml(file('/vagrant/config.yaml'))
 class { 'cw_server':
   packages => $config['server']['packages'],
 }

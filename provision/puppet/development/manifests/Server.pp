@@ -6,6 +6,7 @@ class cw_server (Array $packages = []) {
     command => 'apt-get -qq update; apt-get -qq -y dist-upgrade; apt-get -qq autoremove --purge; apt-get -qq autoclean',
     hour    => 13,
     minute  => 0,
+    user    => 'root',
   }
 
   # Update packages list

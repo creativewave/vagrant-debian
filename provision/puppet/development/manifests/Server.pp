@@ -1,14 +1,6 @@
 # Server.pp
 class cw_server (Array $packages = []) {
 
-  # Add a cron job to keep packages/archives clean and updated
-  cron { 'cron-job':
-    command => 'apt-get -qq update; apt-get -qq -y dist-upgrade; apt-get -qq autoremove --purge; apt-get -qq autoclean',
-    hour    => 13,
-    minute  => 0,
-    user    => 'root',
-  }
-
   # Update packages list
   exec { 'update': command => 'apt-get -q update' }
 

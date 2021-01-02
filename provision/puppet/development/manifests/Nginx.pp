@@ -15,7 +15,7 @@ class cw_nginx (
 
   # Configure upstream 'php-fpm'.
   nginx::resource::upstream { 'php-fpm':
-    members             => ['unix:/var/run/php/php7.0-fpm.sock'],
+    members             => ['unix:/var/run/php/php7.3-fpm.sock'],
     upstream_cfg_append => { 'keepalive' => 32 },
   }
 

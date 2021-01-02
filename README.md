@@ -67,4 +67,3 @@ To inspect a NodeJS script with a debugger like Chrome Dev Tools, add `local.tes
 * Remove puppet/nginx dependency and its soft dependency to puppetlabs/apt
 * Configure Nginx with Augeas and add global performance settings in config.yaml
 * Remove petems/swap_file dependency
-* Remove willdurand/composer dependency and use official install script

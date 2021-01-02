@@ -47,7 +47,9 @@ class cw_php (
   }
 
   # Install Composer
-  # Todo: remove willdurand/composer dependency and use official install script.
-  # https://getcomposer.org/doc/faqs/how-to-install-composer-programmatically.md
-  include composer
+  exec { 'composer':
+    command => 'wget -qO - https://raw.githubusercontent.com/composer/getcomposer.org/master/web/installer | sudo php -- --install-dir /usr/bin/ --filename composer',
+    creates => '/user/bin/composer',
+    path    => '/usr/bin',
+  }
 }

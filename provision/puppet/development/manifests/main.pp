@@ -2,9 +2,6 @@
 # Puppet Standard Library
 include stdlib
 
-# Set path (paths to all executable commands)
-Exec { path => '/bin/:/sbin/:/usr/bin/:/usr/sbin/:/usr/local/bin/:/usr/local/sbin/' }
-
 # Configure services
 class { 'cw_server':
   packages => $server['packages'],

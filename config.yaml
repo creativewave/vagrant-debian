@@ -1,6 +1,6 @@
 vm:
-  box: debian/stretch64
-  name: Debian Stretch
+  box: debian/buster64
+  name: Debian
   hostname: local.test
   ip: 192.168.56.101
   memory: 2048
@@ -10,6 +10,7 @@ vm:
     target: /var/www
 server:
   packages:
+    - exim4
     - git
     - memcached
     - vim

@@ -1,6 +1,6 @@
-# Vagrant Debian Stretch (Puppet)
+# Vagrant Debian
 
-Recipe to create and manage a Debian Stretch server with [Vagrant](https://www.vagrantup.com/) and [Puppet](https://docs.puppet.com/puppet/latest/), with the following stack:
+Recipe to create and manage a Debian server with [Vagrant](https://www.vagrantup.com/) and [Puppet](https://docs.puppet.com/puppet/latest/), with the following stack:
 
 * Nginx
 * PHP FPM + Xdebug + Composer
@@ -14,7 +14,7 @@ Inspired from [Puphpet](https://puphpet.com/).
 
 ## Installation
 
-`git clone https://github.com/creativewave/debian-stretch-vagrant vagrant/debian-stretch && cd $_ && vagrant up`
+`git clone https://github.com/creativewave/vagrant-debian debian && cd $_ && vagrant up`
 
 ### Hosts file
 
@@ -38,8 +38,8 @@ They all have different pros and cons but IMO `virtualbox` is the easiest one to
 To configure a shared folder handled by Virtual Box, you should do these 3 steps :
 
 - `vagrant plugin install vagrant-vbguest`
-- `vagrant box add debian/stretch64`
-- replace `rsync` by `virtualbox` in `~/.vagrant.d/boxes/debian-VAGRANTSLASH-stretch64/<version>/virtualbox/Vagrantfile`
+- `vagrant box add debian/buster64`
+- replace `rsync` by `virtualbox` in `~/.vagrant.d/boxes/debian-VAGRANTSLASH-buster64/<version>/virtualbox/Vagrantfile`
 
 Run `vagrant up` and it works!
 

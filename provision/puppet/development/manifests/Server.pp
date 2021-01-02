@@ -1,5 +1,5 @@
 # Server.pp
-class cw_server (Array $packages = []) {
+class cw_server (Array $packages = [], String $timezone) {
 
   # Update packages list
   exec { 'update': command => 'apt-get -q update' }
@@ -20,8 +20,9 @@ class cw_server (Array $packages = []) {
   ensure_packages($packages)
 
   # Configure time
-  exec { 'timedatectl set-timezone Europe/Paris':
-    unless => 'test `cat /etc/timezone` = Europe/Paris',
+  exec { 'set-timezone':
+    command => "timedatectl set-timezone $timezone",
+    unless  => "test `cat /etc/timezone` = $timezone",
     path    => '/usr/bin',
   }
 

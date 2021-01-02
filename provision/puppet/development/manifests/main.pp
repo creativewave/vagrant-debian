@@ -5,6 +5,7 @@ include stdlib
 # Configure services
 class { 'cw_server':
   packages => $server['packages'],
+  timezone => $server['timezone'],
 }
 class { 'cw_nginx':
   vhosts  => $nginx['vhosts'],

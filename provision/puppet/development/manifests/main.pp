@@ -6,18 +6,17 @@ include stdlib
 Exec { path => '/bin/:/sbin/:/usr/bin/:/usr/sbin/:/usr/local/bin/:/usr/local/sbin/' }
 
 # Configure services
-$config = parseyaml(file('/vagrant/config.yaml'))
 class { 'cw_server':
-  packages => $config['server']['packages'],
+  packages => $server['packages'],
 }
 class { 'cw_nginx':
-  vhosts  => $config['nginx']['vhosts'],
+  vhosts  => $nginx['vhosts'],
 }
 include cw_nodejs
 class { 'cw_php':
-  modules => $config['php']['modules'],
-  pool    => $config['php']['pool'],
-  conf    => $config['php']['conf'],
-  xdebug  => $config['php']['xdebug'],
+  modules => $php['modules'],
+  pool    => $php['pool'],
+  conf    => $php['conf'],
+  xdebug  => $php['xdebug'],
 }
 include cw_mariadb

@@ -6,6 +6,12 @@ PUPPET_DIR='/vagrant/provision/puppet/development'
 if [[ ! -f /.vagrant/install-puppet ]]; then
     echo 'Vagrant: installing Puppet, Librarian Puppet, and Puppet modules'
     apt-get -qq update && apt-get -qy install puppet librarian-puppet
+    # The line below fixes an issue related to Vagrant not being able to copy
+    # facts from host to the below guest directory that is not created when
+    # installing facter < 3.14.12-1.
+    # https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=962692#50
+    # https://tickets.puppetlabs.com/browse/PA-1025
+    mkdir -p /etc/puppetlabs/facter/facts.d/
     # The line below fixes an issue related to Puppet not being able to install
     # modules in a shared directory.
     # No existing ticket on https://tickets.puppetlabs.com/.

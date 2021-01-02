@@ -64,6 +64,8 @@ Vagrant.configure('2') do |config|
   config.vm.provision :puppet do |puppet|
     puppet.environment        = 'development'
     puppet.environment_path   = 'provision/puppet'
+    puppet.facter             = conf
+    puppet.structured_facts   = true
     puppet.synced_folder_type = 'virtualbox'
     puppet.options            = '--verbose'
   end

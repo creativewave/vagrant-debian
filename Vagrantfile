@@ -52,7 +52,7 @@ Vagrant.configure('2') do |config|
   # Provisioning
   # https://www.vagrantup.com/docs/provisioning/
   # Create a directory managing provisioning tasks status.
-  config.vm.provision :shell, inline: "mkdir -p /.vagrant"
+  config.vm.provision :shell, inline: 'mkdir -p /.vagrant'
   # Hook before first vagrant up (executed once or use 'provision' flag/command).
   config.vm.provision :shell do |s|
     s.path = 'provision/shell/exec-hooks.sh'
@@ -64,7 +64,6 @@ Vagrant.configure('2') do |config|
   config.vm.provision :puppet do |puppet|
     puppet.environment        = 'development'
     puppet.environment_path   = 'provision/puppet'
-    puppet.module_path        = 'provision/puppet/development/modules'
     puppet.synced_folder_type = 'virtualbox'
     puppet.options            = '--verbose'
   end

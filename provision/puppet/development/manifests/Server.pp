@@ -10,7 +10,7 @@ class cw_server (Array $packages = []) {
   }
 
   # Update packages list
-  exec { 'update': command => 'apt-get -qq update' }
+  exec { 'update': command => 'apt-get -q update' }
 
   # Add a rule to update packages list before installing package
   Exec['update'] -> Package <| |>

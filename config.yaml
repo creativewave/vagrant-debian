@@ -4,7 +4,7 @@ vm:
   hostname: local.test
   ip: 192.168.56.101
   memory: 2048
-  cpus: 2
+  cpus: 1
   shared:
     source: 'C:/Users/<your-os-username>/Documents/www'
     target: /var/www

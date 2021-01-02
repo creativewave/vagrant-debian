@@ -4,6 +4,7 @@ class cw_nodejs {
   # Add/update NodeJS GNUPG key
   exec { 'nodejs-gnupg-key':
     command => 'wget -qO - https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -',
+    creates => '/etc/apt/sources.list.d/nodejs.list',
     path    => '/usr/bin',
   }
 

@@ -34,10 +34,7 @@ class cw_server (Array $packages = []) {
 
   # Copy user dot files
   exec { 'dotfiles':
-    cwd     => '/home/vagrant',
-    command => 'cp -r /vagrant/provision/files/dot/.[a-zA-Z0-9]* /root/ && \
-                cp -r /vagrant/provision/files/dot/.[a-zA-Z0-9]* /home/vagrant/ && \
-                chown -R vagrant /home/vagrant/.[a-zA-Z0-9]*',
+    command => 'cp -r /vagrant/provision/files/. /home/vagrant && chown vagrant:vagrant -R /home/vagrant',
     path    => '/usr/bin/',
   }
 }

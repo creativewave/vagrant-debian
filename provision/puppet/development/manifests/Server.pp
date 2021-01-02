@@ -30,12 +30,7 @@ class cw_server (Array $packages = []) {
   include swap_file
 
   # Install and configure Mailhog
-  class { 'mailhog': mailhog_version => '1.0.0' }
-  # Fix user permission issue: https://github.com/ftaeger/ftaeger-mailhog/issues/7
-  exec { 'chmod g-w /usr/local && chmod g-w /usr/local/bin':
-    onlyif => 'test 775 -eq `stat -c %a /usr/local | cut -c 2-`',
-    notify => Service['mailhog'],
-  }
+  class { 'mailhog': mailhog_version => '1.0.1' }
 
   # Copy user dot files
   exec { 'dotfiles':

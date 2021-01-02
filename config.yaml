@@ -110,18 +110,19 @@ nginx:
             set: $path_info $fastcgi_path_info
 php:
   modules:
-    - php-curl
-    - php-dev
-    - php-fpm
-    - php-gd
-    - php-intl
-    - php-mbstring
-    - php-mcrypt
+    - php-bcmath    # Prestashop 1.7
+    - php-curl      # Prestashop 1.6-1.7, Wordpress
+    #- php-dev       # To install removed extensions (eg. mcrypt)
+    - php-imagick   # Prestashop 1.6-1.7, Wordpress
+    - php-intl      # Prestashop 1.7
+    - php-mbstring  # Prestashop 1.7, PHPUnit, Wordpress
+    #- php-mcrypt    # Prestashop 1.6 (removed from PHP since 7.2)
     - php-memcached
-    - php-mysql
-    - php-soap
+    - php-mysql     # Prestashop 1.6-1.7 (mysqlnd), Wordpress (mysqli)
+    - php-soap      # Prestashop 1.6-1.7
     - php-xdebug
-    - php-zip
+    - php-xml       # Prestashop 1.6-1.7 (dom, simplexml), PHPUnit (dom), Wordpress (dom, xml)
+    - php-zip       # Prestashop 1.6-1.7, Wordpress
   conf:
     display_errors: On
     error_reporting: -1

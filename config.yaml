@@ -6,7 +6,7 @@ vm:
   memory: 2048
   cpus: 1
   shared:
-    source: 'C:/Users/<your-os-username>/Documents/www'
+    source: C:/Users/<your-os-username>/Documents/www
     target: /var/www
 server:
   packages:

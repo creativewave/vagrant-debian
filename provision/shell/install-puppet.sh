@@ -5,7 +5,7 @@ PUPPET_DIR='/vagrant/provision/puppet/development'
 # Install Puppet Agent, Librarian Puppet (modules manager) and Puppet modules.
 if [[ ! -f /.vagrant/install-puppet ]]; then
     echo 'Vagrant: installing Puppet, Librarian Puppet, and Puppet modules'
-    apt-get -qq update && apt-get -qy install puppet librarian-puppet
+    apt-get -q update && apt-get -qy install puppet librarian-puppet
     # The line below fixes an issue related to Vagrant not being able to copy
     # facts from host to the below guest directory that is not created when
     # installing facter < 3.14.12-1.

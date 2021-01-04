@@ -1,5 +1,5 @@
 
-# Puppet Standard Library
+# Load Puppet Standard Library
 include stdlib
 
 # Configure services

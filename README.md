@@ -1,69 +1,65 @@
 # Vagrant Debian
 
-Recipe to create and manage a Debian server with [Vagrant](https://www.vagrantup.com/) and [Puppet](https://docs.puppet.com/puppet/latest/), with the following stack:
+[Vagrant](https://www.vagrantup.com/) recipe to mount an [official Debian](https://app.vagrantup.com/debian/) server with the following stack, installed from backports main or official package repositories:
 
 * Nginx
+* NodeJS
 * PHP FPM + Xdebug + Composer
 * MariaDB
-* NodeJS
 * Mailhog
 
-All packages are downloaded from main/backports official sources, and the OS version comes from the official Vagrant box for Debian: https://app.vagrantup.com/debian/.
+## Hosts file
 
-Inspired from [Puphpet](https://puphpet.com/).
+Your `hosts` file should be modified to forward requests from a specific domain (default: `local.test`) to the server IP (default: `192.168.56.101`). This file is located in:
 
-## Installation
+* Windows: `C:\Windows\System32\drivers\etc\hosts`
+* Mac and other Unix systems: `/etc/hosts`
 
-`git clone https://github.com/creativewave/vagrant-debian debian && cd $_ && vagrant up`
+Other domains such as `my-app-domain.test` or `dev.my-app-domain.com` can be appended to your `hosts`. A subdomain is recommended if you're planning to develop your app locally using https.
 
-### Hosts file
+If you don't want to change your `hosts` for each new project, you can either:
 
-The `hosts` file should be slightly modified in order to forwarded requests from a specific domain (eg: `local.test`) to the guest server IP (`192.168.56.101` by default).
+* use different ports such as `local.test:8001`, `local.test:8002`, etc…
+* use different folders such as `local.test/my-first-app/`, `local.test/my-second-app/`, etc…
+* install [vagrant-hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager) and setup `Vagrantfile` to automatically add domains configured in `config.yml` as aliases of `local.test`
 
-On Windows, this file is located at `C:\Windows\System32\drivers\etc\hosts`.
-On Mac and other Unix systems, this file is located at `/etc/hosts`.
+## Shared folder(s)
 
-Other domains such as `my-app.test` or `dev.my-app.com`, the latter being more flexible when using https, could be appended to `hosts`. If you don't want to change your `hosts` for every new project, you could either:
-
-- use different ports such as `local.test:8001`, `local.test:8002`, etc…
-- use different folders such as `local.test/my-first-app/`, `local.test/my-second-app/`, etc…
-- install [vagrant-hostmanager](https://github.com/devopsgroup-io/vagrant-hostmanager) and slightly change the `Vagrantfile` to automatically set domains configured in `config.yml` as aliases for `local.test`
-
-### Shared folder(s)
-
-The [offical Vagrant Debian boxes](https://wiki.debian.org/Teams/Cloud/VagrantBaseBoxes#Shared_folders) are using `rsync` as the default type for its file system, but it is not available natively on Windows. Other file systems are natively available: `nfs` is available on Mac and Linux, `smb` is available on Windows. And there's also `virtualbox`.
+The [offical Vagrant Debian box](https://wiki.debian.org/Teams/Cloud/VagrantBaseBoxes#Shared_folders) uses `rsync` as the default type for its file system, which is not natively available on Windows. Other file systems are natively available: `virtualbox`, `nfs` (Mac and Linux), `smb` (Windows).
 
 They all have different pros and cons but IMO `virtualbox` is the easiest one to use.
 
-To configure a shared folder handled by Virtual Box, you should do these 3 steps :
+To use shared folders handled by `virtualbox` (vboxsf), you should either replace `debian/<release>` by `debian/contrib-<release>` in `config.yml`, or follow these 3 steps before running the first `vagrant up`:
 
-- `vagrant plugin install vagrant-vbguest`
-- `vagrant box add debian/buster64`
-- replace `rsync` by `virtualbox` in `~/.vagrant.d/boxes/debian-VAGRANTSLASH-buster64/<version>/virtualbox/Vagrantfile`
+1. run `vagrant plugin install vagrant-vbguest`
+2. run `vagrant box add debian/<release>`
+3. replace `rsync` by `virtualbox` in `~/.vagrant.d/boxes/debian-VAGRANTSLASH-<release>/<version>/virtualbox/Vagrantfile`
 
-Run `vagrant up` and it works!
+Some issues might appear when running `npm install` or `composer install` in a shared folders. The simpliest way to avoid these issues is to create a symlink to a non shared folder (eg. the `vagrant` user directory):
 
-### Watching files
+With Composer, just run `ln -s -T ~/composer/<my-app> vendor` from `/var/www/<my-app>/`.
 
-Interfaces to watch files like NodeJS `fs.watch` may require installing `vagrant-notify-forwarder`, because Virtual Box doesn't forward change events on host files to the guest. Some tools like Webpack may offer an alternative by using a polling strategy (and diffing previous/current last modification time), which is fast enough when the number of watched files stays moderate.
+With npm, run the following commands from `/var/www/<my-app>/`:
 
-### NodeJS and npm
-
-Running `npm install` inside shared folders may cause some issues related to symlinks. The simpliest way to avoid them is to create a symlink to a non shared folder inside the guest filesystem:
-
-```
-    mkdir -p ~/.<my-app>/node_modules && ln -s $_ && cd $_
+```shell
+    ln -s ~/npm/<my-app>/node_modules
+    cd ~/npm/<my-app>
     ln -s /path/to/<my-app>/package.json
     ln -s /path/to/<my-app>/package-lock.json
 ```
 
-Note: if you have protocol errors with `ln`, you must run your terminal (and `vagrant up`) with admin privileges on your OS. If you `vagrant up` without admin privilege, exit terminal, then `vagrant ssh` with admin privilege, it will not work: you have to `vagrant reload` with admin privilege.
+**Note:** if you have protocol errors when using `ln -s`, you should open your terminal (and run `vagrant up`) with admin privileges.
 
-To inspect a NodeJS script with a debugger like Chrome Dev Tools, add `local.test:9222` as a network target in `chrome://inspect/#devices`, then run `node --inspect=0.0.0.0:9222 <myapp>.js`.
+## Watching files
+
+Some interfaces for watching files (eg. `fs.watch` in NodeJS) may require installing `vagrant-notify-forwarder`, because Virtual Box doesn't forward change events on host files to the guest. Some tools (eg. Webpack) offer an alternative via polling (and diffing previous/current last modification time), which is fast enough when the number of watched files stays moderate.
+
+## Debugging a NodeJS script
+
+To inspect a NodeJS script with a debugger like the Chrome Dev Tools, add `local.test:9222` as a network target in `chrome://inspect/#devices`, then connect via ssh to the Debian server with `vagrant ssh -- -L 9222:local.test:9222`, and run `node --inspect=0.0.0.0:9222 <script>.js`.
 
 ## Todo
 
+* Add settings in config.yaml to configure Nginx (with Augeas)
 * Remove puppetlabs/mysql dependency
-* Remove puppet/nginx dependency and its soft dependency to puppetlabs/apt
-* Configure Nginx with Augeas and add global performance settings in config.yaml
 * Remove petems/swap_file dependency

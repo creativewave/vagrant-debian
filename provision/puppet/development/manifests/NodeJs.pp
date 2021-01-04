@@ -9,10 +9,10 @@ class cw_nodejs {
   }
 
   # Add NodeJS package repository
-  # Note: https requires apt-transport-https
+  # Note: https (official url scheme) requires apt-transport-https
   file { '/etc/apt/sources.list.d/nodejs.list':
     content => 'deb http://deb.nodesource.com/node_15.x/ buster main',
-    before  => Exec['update'],
+    before  => Exec['update-package-list'],
   }
 
   # Install NodeJS

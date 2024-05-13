@@ -48,15 +48,6 @@ Vagrant.configure('2') do |config|
 
   # Provisioning
   # https://www.vagrantup.com/docs/provisioning/
-  # Create a directory managing provisioning tasks status.
-  config.vm.provision :shell, inline: 'mkdir -p /.vagrant'
-  # Hook before first vagrant up (executed once or use 'provision' flag/command).
-  config.vm.provision :shell do |s|
-    s.path = 'provision/shell/exec-hooks.sh'
-    s.args = ['exec-preprovision']
-  end
-  # Puppet install and (main) provisionning (executed once or use 'provision' flag/command).
-  # https://www.vagrantup.com/docs/provisioning/puppet_apply.html
   config.vm.provision :shell, path: 'provision/shell/install-puppet.sh'
   config.vm.provision :puppet do |puppet|
     puppet.environment        = 'development'
@@ -65,26 +56,6 @@ Vagrant.configure('2') do |config|
     puppet.structured_facts   = true
     puppet.synced_folder_type = 'virtualbox'
     puppet.options            = '--verbose'
-  end
-  # Hook after first vagrant up (executed once or use 'provision' flag/command).
-  config.vm.provision :shell do |s|
-    s.path = 'provision/shell/exec-hooks.sh'
-    s.args = ['exec-once', 'exec-always']
-  end
-  # Hook after first vagrant up (executed once or use 'provision' flag/command), without sudo privileges.
-  config.vm.provision :shell, privileged: false do |s|
-    s.path = 'provision/shell/exec-hooks.sh'
-    s.args = ['exec-once-unprivileged', 'exec-always-unprivileged']
-  end
-  # Hook after each vagrant up/reload (executed once or use 'provision' flag/command).
-  config.vm.provision :shell, run: 'always' do |s|
-    s.path = 'provision/shell/exec-hooks.sh'
-    s.args = ['startup-once', 'startup-always']
-  end
-  # Hook after each vagrant up/reload (executed once or use 'provision' flag/command), without sudo privileges.
-  config.vm.provision :shell, run: 'always', privileged: false do |s|
-    s.path = 'provision/shell/exec-hooks.sh'
-    s.args = ['startup-once-unprivileged', 'startup-always-unprivileged']
   end
 
 end

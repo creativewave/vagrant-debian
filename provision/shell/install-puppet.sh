@@ -3,9 +3,12 @@
 PUPPET_DIR='/vagrant/provision/puppet/development'
 
 # Install Puppet Agent, Librarian Puppet (modules manager) and Puppet modules.
-if [[ ! -f /.vagrant/install-puppet ]]; then
+if [[ ! -f /tmp/vagrant-puppet/install-puppet ]]; then
     echo 'Vagrant: installing Puppet, Librarian Puppet, and Puppet modules'
-    apt-get -q update && apt-get -qy install puppet librarian-puppet
+    wget -qO /etc/apt/trusted.gpg.d/puppet.gpg https://apt.puppetlabs.com/keyring.gpg
+    echo 'deb https://apt.puppetlabs.com/ bookworm puppet8' > /etc/apt/sources.list.d/puppet.list
+    apt-get -q update && apt-get -qy install puppet-agent librarian-puppet
+    export PATH=/opt/puppetlabs/bin:$PATH
     # The line below fixes an issue related to Vagrant not able to copy facts
     # to this guest directory because it is not created when installing facter,
     # even with version > 3.14.12-1.
@@ -16,15 +19,15 @@ if [[ ! -f /.vagrant/install-puppet ]]; then
     # install modules in a shared directory. There is no existing ticket on
     # https://tickets.puppetlabs.com/.
     mkdir /tmp/vagrant-puppet/librarian/ && librarian-puppet config tmp $_ --global
-    touch /.vagrant/install-puppet
-    cd $PUPPET_DIR && librarian-puppet install
-    touch /.vagrant/install-puppet-modules
+    touch /tmp/vagrant-puppet/install-puppet
+    cd $PUPPET_DIR && librarian-puppet install #--verbose
+    touch /tmp/vagrant-puppet/install-puppet-modules
     echo 'Vagrant: finished installing Puppet, Librarian Puppet, and Puppet modules'
 fi
 
-if [[ ! -f /.vagrant/install-puppet-modules ]]; then
+if [[ ! -f /tmp/vagrant-puppet/install-puppet-modules ]]; then
     echo 'Vagrant: updating Puppet modules'
     cd $PUPPET_DIR && librarian-puppet update
-    touch /.vagrant/install-puppet-modules
+    touch /tmp/vagrant-puppet/install-puppet-modules
     echo 'Vagrant: finished updating Puppet modules'
 fi

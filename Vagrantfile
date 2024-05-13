@@ -7,7 +7,7 @@ Vagrant.configure('2') do |config|
 
   # Machine
   # https://www.vagrantup.com/docs/vagrantfile/machine_settings.html
-  config.vm.box      = conf['vm']['box']
+  config.vm.box      = 'debian/bookworm64'
   config.vm.hostname = conf['vm']['hostname']
 
   # SSH
@@ -20,12 +20,14 @@ Vagrant.configure('2') do |config|
 
   # Synced folders
   # https://www.vagrantup.com/docs/synced-folders/
-  config.vm.synced_folder conf['vm']['shared']['source'], conf['vm']['shared']['target'],
-    id:    'var/www',
+  conf['vm']['shared'].each { |source, target|
+    config.vm.synced_folder source, target,
+    id:    target,
     type:  'virtualbox',
-    group: 'vagrant', # NodeJS will be run as this user.
+    group: 'vagrant', # NodeJS will be run by this user.
     owner: 'www-data',
     mount_options: ['dmode=775', 'fmode=774']
+  }
 
   # Provider (Virtual Box)
   # https://www.vagrantup.com/docs/virtualbox/configuration.html
@@ -36,17 +38,11 @@ Vagrant.configure('2') do |config|
     # Allow guest to use host DNS in order to speed up domain names resolutions.
     # https://www.virtualbox.org/manual/ch09.html#nat_host_resolver_proxy
     vb.customize ['modifyvm', :id, '--natdnshostresolver1', 'on']
-    # VirtualBox prevents service `systemd-timesyncd` to start, as it already
-    # handles time sync (based on host time), but related settings are not low
-    # enough in order to keep it synced when VM is up since a long time.
+    # VirtualBox handles time sync based on host time, instead of relying on
+    # `systemd-timesyncd`, but the default value for the following setting is
+    # not low enough when the VM is up since a long time.
     # http://www.virtualbox.org/manual/ch09.html#changetimesync
     vb.customize ['guestproperty', 'set', :id, '/VirtualBox/GuestAdd/VBoxService/--timesync-set-threshold', '6000']
-    # Following statements are related to an issue regarding symlinks.
-    # See https://www.virtualbox.org/manual/ch04.html#sharedfolders
-    # But it's not enough to enable this privilege. Run Vagrant as admin or
-    # see https://www.virtualbox.org/ticket/10085#comment:32
-    vb.customize ['setextradata', :id, 'VBoxInternal2/SharedFoldersEnableSymlinksCreate//vagrant', '1']
-    vb.customize ['setextradata', :id, 'VBoxInternal2/SharedFoldersEnableSymlinksCreate//var/www', '1']
   end
 
   # Provisioning

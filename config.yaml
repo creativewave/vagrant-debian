@@ -1,13 +1,11 @@
 vm:
-  box: debian/buster64
   name: Debian
   hostname: local.test
   ip: 192.168.56.101
   memory: 2048
   cpus: 1
   shared:
-    source: C:/Users/<your-os-username>/Documents/www
-    target: /var/www
+    C:/Users/<username>/Documents/www: /var/www
 server:
   packages:
     - exim4
@@ -110,6 +108,13 @@ nginx:
             fastcgi_read_timeout: 120
             set: $path_info $fastcgi_path_info
 php:
+  conf:
+    display_errors: On
+    error_reporting: -1
+    max_execution_time: 120
+    max_input_vars: 10000
+    request_terminate_timeout: 120
+    sendmail_path: '/usr/bin/mailhog sendmail root@local.test'
   modules:
     - php-bcmath    # Prestashop 1.7
     - php-curl      # Prestashop 1.6-1.7, Wordpress
@@ -121,16 +126,9 @@ php:
     - php-memcached
     - php-mysql     # Prestashop 1.6-1.7 (mysqlnd), Wordpress (mysqli)
     - php-soap      # Prestashop 1.6-1.7
-    - php-xdebug
-    - php-xml       # Prestashop 1.6-1.7 (dom, simplexml), PHPUnit (dom), Wordpress (dom, xml)
+    - php-xdebug    # PHPUnit
+    - php-xml       # Prestashop 1.6-1.7 (dom, simplexml), PHPUnit (dom, xmlwriter), Wordpress (dom, xml)
     - php-zip       # Prestashop 1.6-1.7, Wordpress
-  conf:
-    display_errors: On
-    error_reporting: -1
-    max_execution_time: 120
-    max_input_vars: 10000
-    request_terminate_timeout: 120
-    sendmail_path: '/usr/bin/mailhog sendmail root@local.test'
   pool:
     www:
       pm.max_children: 20

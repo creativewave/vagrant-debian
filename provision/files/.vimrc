@@ -2,7 +2,6 @@
 " https://vimhelp.org/options.txt.html
 " ------------------------------------------------------------------------------
 
-set autoindent
 set autoread
 set backspace=eol,start,indent
 set cmdheight=2
@@ -17,7 +16,6 @@ set ruler
 set scrolloff=7
 set shiftwidth=4
 set smartcase
-set smartindent
 set smarttab
 set tabstop=4
 set wildignore=*~,.hg\*,.git\*,*.o,*.pyc,.svn\*

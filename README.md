@@ -46,10 +46,6 @@ With npm, run the following commands from `/var/www/<my-app>/`:
 
 Some interfaces for watching files (eg. `fs.watch` in NodeJS) may require installing `vagrant-notify-forwarder`, because Virtual Box does not forward change events on host files to the guest. Polling (and diffing previous/current last modification time) is an alternative offered by some tools (eg. Webpack), that is fast enough when the number of watched files remains moderate.
 
-## Debugging a NodeJS script
-
-To inspect a NodeJS script with a debugger like the Chrome Dev Tools, add `local.test:9222` as a network target in `chrome://inspect/#devices`, then connect to the Debian server via `vagrant ssh -- -L 9222:local.test:9222`and run `node --inspect=0.0.0.0:9222 <script>.js`.
-
 ## Todo
 
 * Add settings in config.yaml to configure Nginx (with Augeas)

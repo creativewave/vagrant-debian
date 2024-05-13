@@ -12,6 +12,7 @@ Vagrant.configure('2') do |config|
 
   # SSH
   # https://www.vagrantup.com/docs/vagrantfile/ssh_settings.html
+  config.ssh.extra_args = ['-L', "9222:#{conf['vm']['hostname']}:9222"]
   config.ssh.insert_key = false
 
   # Network

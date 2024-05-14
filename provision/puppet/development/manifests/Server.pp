@@ -15,7 +15,4 @@ class server (Array $packages = [], String $timezone) {
   # Configure SWAP
   # Todo: remove petems/swap_file dependency
   include swap_file
-
-  # Install and configure Mailhog
-  class { 'mailhog': mailhog_version => '1.0.1' }
 }

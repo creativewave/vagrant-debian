@@ -8,6 +8,7 @@ class { 'server':
   packages => $server['packages'],
   timezone => $server['timezone'],
 }
+include mailhog
 class { 'nginx':
   vhosts  => $nginx['vhosts'],
 }

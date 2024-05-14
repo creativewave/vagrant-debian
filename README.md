@@ -50,4 +50,3 @@ Some interfaces for watching files (eg. `fs.watch` in NodeJS) may require instal
 
 * Add settings in config.yaml to configure Nginx (with Augeas)
 * Remove puppetlabs/mysql dependency
-* Remove petems/swap_file dependency

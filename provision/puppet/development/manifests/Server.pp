@@ -11,8 +11,4 @@ class server (Array $packages = [], String $timezone) {
   exec { 'copy-user-files':
     command => 'cp -r /vagrant/provision/files/. /home/vagrant && chown vagrant:vagrant -R /home/vagrant',
   }
-
-  # Configure SWAP
-  # Todo: remove petems/swap_file dependency
-  include swap_file
 }

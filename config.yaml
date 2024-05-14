@@ -10,6 +10,7 @@ server:
   packages:
     - exim4
     - git
+    - gnupg2
     - memcached
     - vim
   timezone: Europe/Paris

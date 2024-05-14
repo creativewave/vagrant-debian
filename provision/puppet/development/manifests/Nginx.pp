@@ -1,5 +1,5 @@
-# Nginx.pp
-class cw_nginx (
+
+class nginx (
   Array $modules = [],
   Hash $vhosts = {}
 ) {
@@ -15,7 +15,7 @@ class cw_nginx (
 
   # Configure upstream 'php-fpm'.
   nginx::resource::upstream { 'php-fpm':
-    members             => ['unix:/var/run/php/php7.3-fpm.sock'],
+    members             => ['unix:/var/run/php/php8.2-fpm.sock'],
     upstream_cfg_append => { 'keepalive' => 32 },
   }
 

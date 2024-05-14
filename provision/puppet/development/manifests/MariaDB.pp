@@ -1,5 +1,5 @@
-# MariaDB.pp
-class cw_mariadb {
+
+class mariadb {
 
   # Install and run MariaDB server
   # TODO: remove puppetlabs/mysql dependency
@@ -19,6 +19,11 @@ class cw_mariadb {
         table      => '*.*',
         user       => 'vagrant@localhost',
       },
+    },
+    # https://github.com/puppetlabs/puppetlabs-mysql/issues/1566
+    override_options => {
+      mysqld => { log-error => undef },
+      mysqld_safe => { log-error => undef },
     },
   }
 

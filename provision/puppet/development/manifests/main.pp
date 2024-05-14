@@ -1,20 +1,21 @@
 
-# Load Puppet Standard Library
 include stdlib
 
-# Configure services
-class { 'cw_server':
+Exec { path => '/usr/bin/:/usr/sbin/' }
+exec { 'apt-get -q update': } -> Package <| title != 'gnupg2' |>
+
+class { 'server':
   packages => $server['packages'],
   timezone => $server['timezone'],
 }
-class { 'cw_nginx':
+class { 'nginx':
   vhosts  => $nginx['vhosts'],
 }
-include cw_nodejs
-class { 'cw_php':
+include nodejs
+class { 'php':
   modules => $php['modules'],
   pool    => $php['pool'],
   conf    => $php['conf'],
   xdebug  => $php['xdebug'],
 }
-include cw_mariadb
+include mariadb

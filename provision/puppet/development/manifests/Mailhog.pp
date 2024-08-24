@@ -36,5 +36,5 @@ class mailhog {
     system => true,
   }
 
-  service { 'mailhog': }
+  service { 'mailhog': ensure  => 'running' }
 }

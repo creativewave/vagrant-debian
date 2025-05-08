@@ -8,7 +8,7 @@ class nodejs {
 
   # Note: https (official url scheme) requires apt-transport-https
   file { '/etc/apt/sources.list.d/nodejs.list':
-    content => 'deb [signed-by=/usr/share/keyrings/nodejs.gpg] http://deb.nodesource.com/node_22.x/ nodistro main',
+    content => 'deb [signed-by=/usr/share/keyrings/nodejs.gpg] http://deb.nodesource.com/node_24.x/ nodistro main',
     before  => Exec['apt-get -q update'],
   }
   package { 'nodejs': }
